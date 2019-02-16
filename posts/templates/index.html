@@ -1,0 +1,16 @@
+
+{% extends 'app.html' %}
+{% block content %}
+    {% if posts %}
+        <ul class="list-group">
+            {% for post in posts %}
+                <li class="list-group-item">
+                    <a href="{% url 'posts:show' post.id %}">
+                        {{ post.title | safe | truncatewords:'10'| linebreaks  }}
+                    </a>
+                </li>
+            {% endfor %}
+
+        </ul>
+    {% endif %}
+{% endblock %}
