@@ -1,5 +1,5 @@
-from django.urls import path, include
-from .views import index, edit, delete, show, create
+from django.urls import path
+from .views import (index, edit, delete, show, create)
 
 app_name = 'posts'
 
