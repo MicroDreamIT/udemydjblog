@@ -15,5 +15,6 @@
         <a class="btn btn-sm btn-primary" href="{% url 'posts:edit' post.id %}">
             edit
         </a>
+        <a href="{% url 'posts:delete' post.id %}" class="btn btn-sm btn-danger">delete</a>
     {% endif %}
 {% endblock %}
