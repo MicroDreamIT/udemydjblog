@@ -1,5 +1,5 @@
 from django.contrib import admin
-from posts.models import Post
+from posts.models import Post, Category
 
 
 # Register your models here.
@@ -10,3 +10,6 @@ class PostAdmin(admin.ModelAdmin):
     list_editable = ['title']
     search_fields = ['title', 'description']
     list_display_links = ['id']
+
+
+admin.site.register(Category)

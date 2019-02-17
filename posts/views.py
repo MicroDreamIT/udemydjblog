@@ -13,15 +13,12 @@ def index(request):
 
 def create(request):
     if request.method == 'POST':
-        if request.user.is_authenticated:
             form = PostForm(request.POST, request.FILES or None)
             if form.is_valid():
                 __post_save(form, request, 'blog has been created')  # sub method
             else:
                 messages.error(request, 'please try again')
                 return render(request, 'create.html', {'form': form})
-        else:
-            raise Http404
 
     return render(request, 'create.html', {'form': PostForm})
 
@@ -52,7 +49,10 @@ def delete(request, slug):
 
 # private methods
 def __post_save(form, request, message):
-    form.user = request.user
-    instance = form.save(commit=False)
-    instance.save()
-    messages.success(request, message)
+    if request.user.is_authenticated:
+        form.user = request.user
+        instance = form.save(commit=False)
+        instance.save()
+        messages.success(request, message)
+    else:
+        raise Http404

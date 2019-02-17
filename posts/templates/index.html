@@ -1,19 +1,37 @@
-
 {% extends 'app.html' %}
 {% block content %}
     {% if posts %}
-        <ul class="list-group">
+        <div class="row">
             {% for post in posts %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <a href="{% url 'posts:show' post.slug %}">
-                        {{ post.title | safe | truncatewords:'10'| linebreaks  }}
-                    </a>
-                    <div>
-                        <a class="btn btn-sm btn-danger" href="{% url 'posts:delete' post.id %}">danger</a>
-                        <a class="btn btn-sm btn-primary" href="{% url 'posts:edit' post.id %}">edit</a>
+                <div class="col-md-3">
+                    <div class="card">
+                        {% if post.image %}
+                            <img class="card-img-top" src="{{ post.image.url }}" alt="Card image cap">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'posts:show' post.slug %}">
+                                    {{ post.title | safe | truncatechars:'20'| linebreaks }}
+                                </a>
+                            </h5>
+                            <div class="card-text">
+                                <p>{{ post.description |truncatewords:'3'| linebreaks }}</p>
+                                {% if post.category %}
+                                    <p class="small">
+                                    <span class="badge">
+                                        category: {{ post.category.name }}
+                                    </span>
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a class="btn btn-sm btn-danger" href="{% url 'posts:delete' post.slug %}">delete</a>
+                            <a class="btn btn-sm btn-primary" href="{% url 'posts:edit' post.slug %}">edit</a>
+                        </div>
                     </div>
-                </li>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% endif %}
 {% endblock %}
