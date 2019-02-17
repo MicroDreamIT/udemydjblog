@@ -5,7 +5,7 @@
         <ul class="list-group">
             {% for post in posts %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <a href="{% url 'posts:show' post.id %}">
+                    <a href="{% url 'posts:show' post.slug %}">
                         {{ post.title | safe | truncatewords:'10'| linebreaks  }}
                     </a>
                     <div>

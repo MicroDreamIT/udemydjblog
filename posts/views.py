@@ -13,7 +13,7 @@ def index(request):
 
 def create(request):
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES or None)
         if form.is_valid():
             __post_save(form, request, 'blog has been created')  # sub method
         else:
@@ -23,14 +23,14 @@ def create(request):
     return render(request, 'create.html', {'form': PostForm})
 
 
-def show(request, id):
-    post = get_object_or_404(Post, id=id)
+def show(request, slug):
+    post = get_object_or_404(Post, slug=slug)
     return render(request, 'show.html', {'post': post})
 
 
-def edit(request, id):
-    post = get_object_or_404(Post, id=id)
-    form = PostForm(request.POST or None, instance=post)
+def edit(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    form = PostForm(request.POST or None, request.FILES or None, instance=post)
     if request.method == 'POST':
         if form.is_valid():
             __post_save(form, request, 'blog has been updated')  # sub method
@@ -40,8 +40,8 @@ def edit(request, id):
     return render(request, 'edit.html', {'form': form, 'post': post})
 
 
-def delete(request, id):
-    instance = get_object_or_404(Post, id=id)
+def delete(request, slug):
+    instance = get_object_or_404(Post, slug=slug)
     instance.delete()
     messages.success(request, 'successfully deleted')
     return redirect('posts:index')

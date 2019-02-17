@@ -4,7 +4,7 @@
 {% block content %}
     <h1>Create Blog</h1>
     <hr>
-    <form action="{% url 'posts:create' %}" method="post">
+    <form action="{% url 'posts:create' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form | crispy }}
         <button type="submit" class="btn btn-success">Submit</button>
