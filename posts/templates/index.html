@@ -18,9 +18,10 @@
                                 <p>{{ post.description |truncatewords:'3'| linebreaks }}</p>
                                 {% if post.category %}
                                     <p class="small">
-                                    <span class="badge">
-                                        category: {{ post.category.name }}
-                                    </span>
+                                        category:
+                                        <a href="{% url 'posts:category' post.category.name %}">
+                                            {{ post.category.name }}
+                                        </a>
                                     </p>
                                 {% endif %}
                             </div>

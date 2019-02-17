@@ -6,6 +6,10 @@ from posts.models import Post
 
 
 # public method
+def category(request, name):
+    return HttpResponse(name)
+
+
 def index(request):
     posts = Post.objects.order_by('-created_at')
     return render(request, 'index.html', {'posts': posts})
@@ -13,12 +17,12 @@ def index(request):
 
 def create(request):
     if request.method == 'POST':
-            form = PostForm(request.POST, request.FILES or None)
-            if form.is_valid():
-                __post_save(form, request, 'blog has been created')  # sub method
-            else:
-                messages.error(request, 'please try again')
-                return render(request, 'create.html', {'form': form})
+        form = PostForm(request.POST, request.FILES or None)
+        if form.is_valid():
+            __post_save(form, request, 'blog has been created')  # sub method
+        else:
+            messages.error(request, 'please try again')
+            return render(request, 'create.html', {'form': form})
 
     return render(request, 'create.html', {'form': PostForm})
 
