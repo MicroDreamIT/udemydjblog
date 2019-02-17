@@ -6,7 +6,9 @@
                 <div class="col-md-3">
                     <div class="card">
                         {% if post.image %}
-                            <img class="card-img-top" src="{{ post.image.url }}" alt="Card image cap">
+                            <img class="card-img-top" 
+                                src="{{ post.image.url }}" 
+                                alt="Card image cap">
                         {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">
@@ -15,11 +17,13 @@
                                 </a>
                             </h5>
                             <div class="card-text">
-                                <p>{{ post.description |truncatewords:'3'| linebreaks }}</p>
+                                <p>
+                                    {{ post.description |truncatewords:'3'| linebreaks }}
+                                </p>
                                 {% if post.category %}
                                     <p class="small">
                                         category:
-                                        <a href="{% url 'posts:category' post.category.name %}">
+                                        <a href="{% url 'posts:category' post.category.name|slugify %}">
                                             {{ post.category.name }}
                                         </a>
                                     </p>
@@ -28,7 +32,11 @@
                         </div>
                         <div class="card-footer">
                             <a class="btn btn-sm btn-danger" href="{% url 'posts:delete' post.slug %}">delete</a>
-                            <a class="btn btn-sm btn-primary" href="{% url 'posts:edit' post.slug %}">edit</a>
+                            <a class="btn btn-sm btn-primary" 
+                                href="{% url 'posts:edit' post.slug %}"
+                                >
+                                edit
+                            </a>
                         </div>
                     </div>
                 </div>

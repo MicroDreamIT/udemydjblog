@@ -14,4 +14,9 @@
             </a>
         </div>
     </div>
+    {% if user.is_authenticated %}
+    <div>
+        {{user.username}}
+    </div>
+    {% endif %}
 </nav>

@@ -2,17 +2,22 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from posts.forms import PostForm
-from posts.models import Post
+from posts.models import Post, Category
 
 
 # public method
 def category(request, name):
-    return HttpResponse(name)
+    return render(request, 
+                'index.html',
+                {'posts':Post.objects.filter(
+                    category__name=name.replace('-',' '))})
 
 
 def index(request):
     posts = Post.objects.order_by('-created_at')
-    return render(request, 'index.html', {'posts': posts})
+    return render(request, 
+                'index.html', 
+                {'posts': posts})
 
 
 def create(request):
@@ -24,7 +29,9 @@ def create(request):
             messages.error(request, 'please try again')
             return render(request, 'create.html', {'form': form})
 
-    return render(request, 'create.html', {'form': PostForm})
+    return render(request, 
+                'create.html', 
+                {'form': PostForm})
 
 
 def show(request, slug):
