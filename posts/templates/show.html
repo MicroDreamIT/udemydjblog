@@ -4,6 +4,9 @@
         <h1>
             {{ post.title }}
         </h1>
+        {% if post.user %}
+            <p><span class="small">created By: {{ post.user }}</span></p>
+        {% endif %}
         {% if post.image %}
             <img src="{{ post.image.url }}" class="img-fluid">
         {% endif %}

@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from posts.forms import PostForm
@@ -13,12 +13,15 @@ def index(request):
 
 def create(request):
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES or None)
-        if form.is_valid():
-            __post_save(form, request, 'blog has been created')  # sub method
+        if request.user.is_authenticated:
+            form = PostForm(request.POST, request.FILES or None)
+            if form.is_valid():
+                __post_save(form, request, 'blog has been created')  # sub method
+            else:
+                messages.error(request, 'please try again')
+                return render(request, 'create.html', {'form': form})
         else:
-            messages.error(request, 'please try again')
-            return render(request, 'create.html', {'form': form})
+            raise Http404
 
     return render(request, 'create.html', {'form': PostForm})
 
@@ -49,6 +52,7 @@ def delete(request, slug):
 
 # private methods
 def __post_save(form, request, message):
+    form.user = request.user
     instance = form.save(commit=False)
     instance.save()
     messages.success(request, message)

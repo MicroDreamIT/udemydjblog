@@ -1,12 +1,13 @@
 from django.db import models
 from django.db.models.signals import pre_save
-
+from django.conf import settings
 # Create your models here.
 from django.utils.text import slugify
 
 
 class Post(models.Model):
     title = models.CharField(max_length=191)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
     image = models.FileField(null=True, blank=True)
     slug = models.SlugField(unique=True)
     description = models.TextField()
