@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
@@ -7,17 +8,24 @@ from posts.models import Post, Category
 
 # public method
 def category(request, name):
-    return render(request, 
-                'index.html',
-                {'posts':Post.objects.filter(
-                    category__name=name.replace('-',' '))})
+    return render(request,
+                  'index.html',
+                  {'posts': Post.objects.filter(
+                      category__name=name.replace('-', ' '))})
 
 
 def index(request):
-    posts = Post.objects.order_by('-created_at')
-    return render(request, 
-                'index.html', 
-                {'posts': posts})
+    query = request.GET.get('q')
+    posts = Post.objects
+    if query:
+        posts.filter(Q(title__icontains=query) | Q(description__icontains=query)).distinct()
+    else:
+        posts = Post.objects
+
+    posts = posts.order_by('-created_at')
+    return render(request,
+                  'index.html',
+                  {'posts': posts})
 
 
 def create(request):
@@ -29,9 +37,9 @@ def create(request):
             messages.error(request, 'please try again')
             return render(request, 'create.html', {'form': form})
 
-    return render(request, 
-                'create.html', 
-                {'form': PostForm})
+    return render(request,
+                  'create.html',
+                  {'form': PostForm})
 
 
 def show(request, slug):

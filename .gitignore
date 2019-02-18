@@ -260,3 +260,4 @@ GitHub.sublime-settings
 
 /static/admin/
 /staticcdn/admin/
+/posts/migrations/
