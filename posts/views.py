@@ -16,9 +16,10 @@ def category(request, name):
 
 def index(request):
     query = request.GET.get('q')
+    print(query)
     posts = Post.objects
     if query:
-        posts.filter(Q(title__icontains=query) | Q(description__icontains=query)).distinct()
+        posts = posts.filter(Q(title__icontains=query) | Q(description__icontains=query)).distinct()
     else:
         posts = Post.objects
 
