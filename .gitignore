@@ -191,7 +191,7 @@ typings/
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
-
+.idea/
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
@@ -261,3 +261,4 @@ GitHub.sublime-settings
 /static/admin/
 /staticcdn/admin/
 /posts/migrations/
+/comments/migrations/

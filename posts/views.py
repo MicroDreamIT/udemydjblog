@@ -3,7 +3,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from posts.forms import PostForm
-from posts.models import Post, Category
+from posts.models import Post
 
 
 # public method
@@ -16,7 +16,6 @@ def category(request, name):
 
 def index(request):
     query = request.GET.get('q')
-    print(query)
     posts = Post.objects
     if query:
         posts = posts.filter(Q(title__icontains=query) | Q(description__icontains=query)).distinct()
