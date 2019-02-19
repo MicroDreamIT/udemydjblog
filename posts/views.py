@@ -124,4 +124,5 @@ def __check_and_return_parent(param):
         parent_qs = get_object_or_404(Comment, id=parent_id)
     else:
         parent_qs = None
+
     return parent_qs

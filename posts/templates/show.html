@@ -33,13 +33,17 @@
                         {{ comment.user.username }}
                         <cite title="Source Title">{{ comment.created_at|timesince }}</cite>
                     </footer>
+
+                    <form action="{% url 'posts:show' post.slug %}" method="post">
+                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                        {% csrf_token %}
+                        {{ comment_form | crispy }}
+                        <button type="submit" class="btn btn-sm btn-success">reply</button>
+                    </form>
+
+
                 </blockquote>
-                <form action="{% url 'posts:show' post.slug %}" method="post">
-                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                    {% csrf_token %}
-                    {{ comment_form | crispy }}
-                    <button type="submit" class="btn btn-sm btn-success">reply</button>
-                </form>
+
                 <hr>
             {% endfor %}
         {% endif %}
