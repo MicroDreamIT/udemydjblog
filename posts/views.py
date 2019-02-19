@@ -1,8 +1,10 @@
 from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 
+from comments.forms import CommentForm
 from comments.models import Comment
 from posts.forms import PostForm
 from posts.models import Post
@@ -12,8 +14,9 @@ from posts.models import Post
 def category(request, name):
     return render(request,
                   'index.html',
-                  {'posts': Post.objects.filter(
-                      category__name=name.replace('-', ' '))})
+                  {
+                      'posts': Post.objects.filter(category__name=name.replace('-', ' '))
+                  })
 
 
 def index(request):
@@ -46,8 +49,34 @@ def create(request):
 
 def show(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    comments = Comment.objects.filter_by_model(post)
-    return render(request, 'show.html', {'post': post, 'comments': comments})
+    comments = post.comments
+    initial_data = {
+        'content_type': post.get_content_type,
+        'object_id': post.id
+    }
+    comment_form = CommentForm(request.POST or None, initial=initial_data)
+
+    if comment_form.is_valid():
+        print(comment_form.cleaned_data, '\n', comment_form)
+        c_type = comment_form.cleaned_data.get('content_type')
+        object_id = comment_form.cleaned_data.get('object_id')
+        content_data = comment_form.cleaned_data.get('comments')
+        content_type = ContentType.objects.get(model=c_type)
+        parent_qs = __check_and_return_parent(request.POST.get('parent_id'))
+        new_comment, created = Comment.objects.get_or_create(
+            user=request.user,
+            content_type=content_type,
+            object_id=object_id,
+            comments=content_data,
+            parent=parent_qs
+        )
+
+    return render(request, 'show.html',
+                  {
+                      'post': post,
+                      'comments': comments,
+                      'comment_form': comment_form
+                  })
 
 
 def edit(request, slug):
@@ -59,7 +88,11 @@ def edit(request, slug):
         else:
             messages.error(request, 'Please try again')
 
-    return render(request, 'edit.html', {'form': form, 'post': post})
+    return render(request, 'edit.html',
+                  {
+                      'form': form,
+                      'post': post
+                  })
 
 
 def delete(request, slug):
@@ -78,3 +111,19 @@ def __post_save(form, request, message):
         messages.success(request, message)
     else:
         raise Http404
+
+
+def __check_and_return_parent(param):
+    print(param)
+    try:
+        print(param)
+        parent_id = int(param)
+    except:
+        parent_id = None
+
+    if parent_id:
+        parent_qs = Comment.objects.filter(parent__id=parent_id)
+    else:
+        parent_qs = None
+
+    return parent_qs

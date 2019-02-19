@@ -1,4 +1,5 @@
 {% extends 'app.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
     {% if post %}
         <h1>
@@ -18,18 +19,28 @@
             <span class="badge badge-primary">{{ post.created_at | date:"D d M Y" }}</span>
             <span class="badge badge-secondary">{{ post.updated_at | date:"D d M Y" }}</span>
         </p>
+        <form action="{% url 'posts:show' post.slug %}" method="post" class="form-horizontal">
+            {% csrf_token %}
+            {{ comment_form | crispy }}
+            <button class="btn btn-success">Submit</button>
+        </form>
         {% if comments %}
             <p>Comments</p>
-            {% for comment in comments %}
-                <div class="">
-                    <p>
-                        <span>{{ comment.description }}</span>
-                        <span class="small">
-                        {{ comment.user.username }} | {{ comment.created_at|timesince }}
-                    </span>
-                    </p>
-                    <hr>
-                </div>
+            {% for comment in post.comments %}
+                <blockquote class="blockquote">
+                    <p class="mb-0">{{ comment.comments }}</p>
+                    <footer class="blockquote-footer">
+                        {{ comment.user.username }}
+                        <cite title="Source Title">{{ comment.created_at|timesince }}</cite>
+                    </footer>
+                </blockquote>
+                <form action="{% url 'posts:show' post.slug %}" method="post">
+                    {% csrf_token %}
+                    {{ comment_form.comments }}
+                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                    <button type="submit" class="btn btn-sm btn-success">reply</button>
+                </form>
+                <hr>
             {% endfor %}
         {% endif %}
         <a class="btn btn-sm btn-primary" href="{% url 'posts:edit' post.slug %}">

@@ -3,28 +3,36 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
-# Create your models here.
-from posts.models import Post
-
 
 class CommentManager(models.Manager):
     def filter_by_model(self, obj):
         content_type = ContentType.objects.get_for_model(obj.__class__)  # post or any other Class
-        object_id = obj.id
-        qs = super(CommentManager, self).filter(content_type=content_type, object_id=object_id)
+        qs = super(CommentManager, self).filter(content_type=content_type, object_id=obj.id)
         return qs
 
 
 class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
-    # post = models.ForeignKey(Post, default=1, on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey('content_type', 'object_id')
-    description = models.TextField()
+    comments = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    parent = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
     objects = CommentManager()
+
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return str(self.user.username)
+
+    def children(self):
+        return Comment.objects.filter(parent=self)
+
+    @property
+    def is_parent(self):
+        if self.parent is not None:
+            return False
+        return True
