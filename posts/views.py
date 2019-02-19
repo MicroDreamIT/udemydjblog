@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
@@ -47,9 +46,7 @@ def create(request):
 
 def show(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    content_type = ContentType.objects.get_for_model(Post)
-    object_id = post.id
-    comments = Comment.objects.filter(content_type=content_type, object_id=object_id)
+    comments = Comment.objects.filter_by_model(post)
     return render(request, 'show.html', {'post': post, 'comments': comments})
 
 

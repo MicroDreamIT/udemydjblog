@@ -1,9 +1,18 @@
-from django.db import models
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.db import models
+
 # Create your models here.
 from posts.models import Post
+
+
+class CommentManager(models.Manager):
+    def filter_by_model(self, obj):
+        content_type = ContentType.objects.get_for_model(obj.__class__)  # post or any other Class
+        object_id = obj.id
+        qs = super(CommentManager, self).filter(content_type=content_type, object_id=object_id)
+        return qs
 
 
 class Comment(models.Model):
@@ -15,6 +24,7 @@ class Comment(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    objects = CommentManager()
 
     def __str__(self):
         return str(self.user.username)
