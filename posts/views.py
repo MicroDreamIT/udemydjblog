@@ -57,18 +57,19 @@ def show(request, slug):
     comment_form = CommentForm(request.POST or None, initial=initial_data)
 
     if comment_form.is_valid():
-        print(comment_form.cleaned_data, '\n', comment_form)
+        # print(comment_form.cleaned_data, '\n', comment_form)
         c_type = comment_form.cleaned_data.get('content_type')
         object_id = comment_form.cleaned_data.get('object_id')
         content_data = comment_form.cleaned_data.get('comments')
         content_type = ContentType.objects.get(model=c_type)
         parent_qs = __check_and_return_parent(request.POST.get('parent_id'))
+
         new_comment, created = Comment.objects.get_or_create(
             user=request.user,
             content_type=content_type,
             object_id=object_id,
             comments=content_data,
-            parent=parent_qs
+            parent=parent_qs if parent_qs.id else None
         )
 
     return render(request, 'show.html',
@@ -114,16 +115,13 @@ def __post_save(form, request, message):
 
 
 def __check_and_return_parent(param):
-    print(param)
     try:
-        print(param)
         parent_id = int(param)
     except:
         parent_id = None
 
     if parent_id:
-        parent_qs = Comment.objects.filter(parent__id=parent_id)
+        parent_qs = get_object_or_404(Comment, id=parent_id)
     else:
         parent_qs = None
-
     return parent_qs
