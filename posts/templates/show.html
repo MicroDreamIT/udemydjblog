@@ -48,13 +48,6 @@
                                 {{ child.user.username }}
                                 <cite title="Source Title">{{ child.created_at|timesince }}</cite>
                             </footer>
-
-                            <form action="{% url 'posts:show' post.slug %}" method="post">
-                                <input type="hidden" name="parent_id" value="{{ child.id }}">
-                                {% csrf_token %}
-                                {{ comment_form | crispy }}
-                                <button type="submit" class="btn btn-sm btn-success">reply</button>
-                            </form>
                         </blockquote>
                     {% endfor %}
                 </blockquote>

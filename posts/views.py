@@ -63,13 +63,12 @@ def show(request, slug):
         content_data = comment_form.cleaned_data.get('comments')
         content_type = ContentType.objects.get(model=c_type)
         parent_qs = __check_and_return_parent(request.POST.get('parent_id'))
-        print(parent_qs)
         new_comment, created = Comment.objects.get_or_create(
             user=request.user,
             content_type=content_type,
             object_id=object_id,
             comments=content_data,
-            parent=parent_qs if parent_qs.id else None
+            parent_id=parent_qs.id if parent_qs else None
         )
 
     return render(request, 'show.html',
