@@ -63,7 +63,7 @@ def show(request, slug):
         content_data = comment_form.cleaned_data.get('comments')
         content_type = ContentType.objects.get(model=c_type)
         parent_qs = __check_and_return_parent(request.POST.get('parent_id'))
-
+        print(parent_qs)
         new_comment, created = Comment.objects.get_or_create(
             user=request.user,
             content_type=content_type,
