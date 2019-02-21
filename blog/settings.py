@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'comments',
     # third party app
     'crispy_forms',
-    'livereload'
+    'livereload',
+    'rest_framework'
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
