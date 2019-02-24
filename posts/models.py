@@ -18,7 +18,7 @@ class Category(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=191)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=0, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, default=0, on_delete=models.CASCADE)
     image = models.FileField(null=True, blank=True)
     slug = models.SlugField(unique=True)

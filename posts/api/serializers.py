@@ -31,5 +31,7 @@ class PostSerializer(ModelSerializer):
             'title',
             'slug',
             'description',
-            'created_at'
+            'created_at',
+            'user',
+            'category'
         ]
