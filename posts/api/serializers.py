@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
-from posts.models import Post
+from posts.models import Post, Category
 
 
 class PostUpdateSerializer(ModelSerializer):
@@ -26,6 +26,7 @@ class PostCreateSerializer(ModelSerializer):
 class PostSerializer(ModelSerializer):
     user = SerializerMethodField()
     category = SerializerMethodField()
+
     class Meta:
         model = Post
         fields = [
@@ -44,3 +45,9 @@ class PostSerializer(ModelSerializer):
 
     def get_category(self, obj):
         return obj.category.name
+
+
+class CategorySerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
