@@ -34,7 +34,9 @@ class PostSerializer(ModelSerializer):
             'slug',
             'user',
             'description',
-            'created_at'
+            'created_at',
+            'user',
+            'category'
         ]
 
     def get_user(self, obj):
