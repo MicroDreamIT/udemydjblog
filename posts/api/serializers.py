@@ -25,7 +25,7 @@ class PostCreateSerializer(ModelSerializer):
 
 class PostSerializer(ModelSerializer):
     user = SerializerMethodField()
-
+    category = SerializerMethodField()
     class Meta:
         model = Post
         fields = [
@@ -41,3 +41,6 @@ class PostSerializer(ModelSerializer):
 
     def get_user(self, obj):
         return obj.user.username
+
+    def get_category(self, obj):
+        return obj.category.name
