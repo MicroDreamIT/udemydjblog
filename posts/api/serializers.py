@@ -1,6 +1,8 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from posts.models import Post, Category
+from comments.api.serializers import CommentSerializer
+from comments.models import Comment
 
 
 class PostUpdateSerializer(ModelSerializer):
@@ -51,3 +53,4 @@ class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name']
+

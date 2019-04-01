@@ -40,3 +40,9 @@ class Comment(models.Model):
         if self.parent is not None:
             return False
         return True
+
+    @property
+    def get_content_type(self):
+        instance = self
+        content_type = ContentType.objects.get_for_model(instance.__class__)
+        return content_type
